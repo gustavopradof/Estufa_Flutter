@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "566367883511",
+    "firebase_url": "https://estufa-27517-default-rtdb.firebaseio.com",
+    "project_id": "estufa-27517",
+    "storage_bucket": "estufa-27517.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566367883511:android:1a3e83f9a5865e6db243f2",
+        "android_client_info": {
+          "package_name": "com.example.estufa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566367883511-oh1mkf0g1octtfhvkhp1agba75d6dqm5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACY50gLAiszbZ0tE4Sbgoewao2CHTHdGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566367883511-oh1mkf0g1octtfhvkhp1agba75d6dqm5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "566367883511-dhj5dafurp20q092fui4ku4a38maas3n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.estufa"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566367883511:android:bfa4db9224313becb243f2",
+        "android_client_info": {
+          "package_name": "com.example.tcc_estufa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566367883511-oh1mkf0g1octtfhvkhp1agba75d6dqm5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACY50gLAiszbZ0tE4Sbgoewao2CHTHdGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566367883511-oh1mkf0g1octtfhvkhp1agba75d6dqm5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "566367883511-dhj5dafurp20q092fui4ku4a38maas3n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.estufa"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
