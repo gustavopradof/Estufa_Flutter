@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,38 +34,28 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final List<Widget> _telas = [
-   
-  ];
+  Widget config(){
+  return  Column(
+    children:[
+     const Text("Configuracoes Manuais"),
+      SwitchListTile(
+        title:   const Text('Modo Automatico'),
+        value: _modoauto,
+        onChanged: (bool value) async {
+          ref.update({
+            "auto": value,
+          });
+          setState(() {
+            _modoauto = value;
+          }
+          );
+        },
 
-  bool _bomba = false;
-  bool _ventilador = false;
-  RangeValues _currentRangeValues = const RangeValues(40, 80);
-  DatabaseReference ref = FirebaseDatabase.instance.ref("/ESP32_APP/");
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      
-        body: 
-    
-        Column(children: <Widget>[
-       Center(
-      child: Container(
-        height: 50,
-        padding: const EdgeInsets.fromLTRB(10, 20, 0, 10),
-       child: const Align(
-        alignment: Alignment.topLeft,
-        child:Text("Configuração Manuais",
-         textAlign: TextAlign.left,
-         style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        ),
-        ),
-     ),
-      Center(
-          child: SwitchListTile(
-        title: const Text('Ventilador'),
+        secondary: const Icon(Icons.lightbulb_outline),
+      ),
+  
+    SwitchListTile(
+        title: const Text('Ventilação'),
         value: _ventilador,
         onChanged: (bool value) async {
           ref.update({
@@ -71,44 +63,145 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           });
           setState(() {
             _ventilador = value;
-          });
+          }
+          );
         },
+
         secondary: const Icon(Icons.lightbulb_outline),
-      )),
-      Center(
-          child: SwitchListTile(
-        title: const Text('Bomba'),
-        value: _bomba,
+      ),
+  
+        SwitchListTile(
+        title: const Text('Iluminação'),
+        value: _luz,
         onChanged: (bool value) async {
           ref.update({
-            "bomba": value,
+            "luz": value,
           });
           setState(() {
-            _bomba = value;
-          });
+            _luz = value;
+          }
+          );
         },
+
         secondary: const Icon(Icons.lightbulb_outline),
-      )),
-      RangeSlider(
-        values: _currentRangeValues,
+      ),
+  
+     SwitchListTile(
+         title: const Text('Irrigação'),
+        value: _bomba,
+         onChanged: (bool value) async {
+          ref.update({
+             "bomba": value,
+           });
+          setState(() {
+             _bomba = value;
+           });
+         },
+         secondary: const Icon(Icons.lightbulb_outline),
+       ),
+      
+    ]
+   
+  );
+   
+
+   
+  }
+
+
+Widget auto(){
+  return Column(
+    children:[
+       const Text('Configurações Automaticas'),
+      const Text('Temperatura'),
+        RangeSlider(
+        values: tempRange,
         max: 100,
         divisions: 10,
         labels: RangeLabels(
-          _currentRangeValues.start.round().toString(),
-          _currentRangeValues.end.round().toString(),
+          tempRange.start.round().toString(),
+          tempRange.end.round().toString(),
         ),
         onChanged: (RangeValues values) {
           setState(() {
-            _currentRangeValues = values;
+            tempRange = values;
           });
         },
       ),
-     
-     
     ]
-    )
+  );
+}
+
+  bool _modoauto = false; 
+  bool _luz = false;
+  bool _bomba = false;
+  bool _ventilador = false;
+  RangeValues tempRange = const RangeValues(40, 80);
+  DatabaseReference ref = FirebaseDatabase.instance.ref("/ESP32_APP/");
+ int selectedIndex = 0;
+ void onItemTapped(int index) {
+  setState(() {
+    selectedIndex = index;
+  });
+}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+     
+     bottomNavigationBar: BottomNavigationBar(
+    items: const <BottomNavigationBarItem>[
+      
+        
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+        
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.tune),
+        label: 'Configurações Automáticas',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+        label: 'Configurações Manuais',
+      ),
+      
+    ],  
+       currentIndex: selectedIndex, //New
+  onTap: onItemTapped,      
+     ),
+//body: <Widget>[
+       body:<Widget>[
+        Center(         
+           
+),
+
+
+        
+        
+     
+        
+        Container(
+         child:auto(),
+        ),
+       
+     
+       
+  
+        Center(
+          child: config(),
+        ),
+    
+       
+      ] [selectedIndex],
     );
   }
+
+
+    
+    
+     
+
 
   String data = '';
   String _displayText = " ";
@@ -120,4 +213,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     });
   }
 }
-    
+
+
+
+
+   
+ 
+
+
+      

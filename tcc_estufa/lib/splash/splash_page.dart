@@ -12,7 +12,7 @@ class SplashPage extends StatefulWidget{
 class SplashPageState extends State<SplashPage>{
 
 void initializeSplash() async{
-  await Future.delayed(const Duration(seconds: 4));
+  await Future.delayed(const Duration(seconds: 0));
   Navigator.pushReplacementNamed(context, '/home');
 }
 
@@ -24,6 +24,7 @@ void initState(){
 
   Widget build(BuildContext context){
     return  Scaffold(
+      
        backgroundColor:Colors.blueGrey,
        body: Center(
         child: Image.asset("image/LOGO.png")
