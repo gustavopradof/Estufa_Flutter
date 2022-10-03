@@ -34,6 +34,17 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+DatabaseReference ref = FirebaseDatabase.instance.ref();
+    String data = '';
+  String _displayText = " ";
+  void _activateListeners() {
+    ref.child('/ESP32_APP/HUMIDITY').onValue.listen((event) {
+      setState(() {
+        _displayText = (event.snapshot.value.toString());
+      });
+    });
+  }
+
   Widget config(){
   return  Column(
     children:[
@@ -128,16 +139,54 @@ Widget auto(){
           });
         },
       ),
+            
+      const Text('Umidade'),
+        RangeSlider(
+        values: umiRange,
+        max: 100,
+        divisions: 10,
+        labels: RangeLabels(
+          umiRange.start.round().toString(),
+          umiRange.end.round().toString(),
+        ),
+        onChanged: (RangeValues values) {
+          setState(() {
+            umiRange = values;
+          });
+        },
+      ),
+      const Text('Tempo para ativação'),
     ]
   );
 }
 
+Widget home(){
+  return Column(
+    children: [
+      Container(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(_displayText),
+              ],
+            ),
+            Row()
+          ],
+        
+        ),
+      ),
+    ],
+  );
+}
+
+RangeValues umiRange = const RangeValues(40, 80);
   bool _modoauto = false; 
   bool _luz = false;
   bool _bomba = false;
   bool _ventilador = false;
   RangeValues tempRange = const RangeValues(40, 80);
-  DatabaseReference ref = FirebaseDatabase.instance.ref("/ESP32_APP/");
+  
  int selectedIndex = 0;
  void onItemTapped(int index) {
   setState(() {
@@ -146,6 +195,7 @@ Widget auto(){
 }
   @override
   Widget build(BuildContext context) {
+    _activateListeners();
     return Scaffold(
      
      bottomNavigationBar: BottomNavigationBar(
@@ -172,10 +222,9 @@ Widget auto(){
      ),
 //body: <Widget>[
        body:<Widget>[
-        Center(         
-           
-),
-
+      Container(
+         child:home(),
+        ),
 
         
         
@@ -198,21 +247,12 @@ Widget auto(){
   }
 
 
-    
+}    
     
      
 
 
-  String data = '';
-  String _displayText = " ";
-  void _activateListeners() {
-    ref.child('/ESP32_APP/HUMIDITY').onValue.listen((event) {
-      setState(() {
-        _displayText = (event.snapshot.value.toString());
-      });
-    });
-  }
-}
+
 
 
 
