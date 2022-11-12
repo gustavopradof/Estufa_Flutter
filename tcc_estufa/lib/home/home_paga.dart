@@ -76,7 +76,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref();
     ref.child('/estufa_tcc/sensores/temperatura').onValue.listen((event) {
       setState(() {
         temperaturaVal = (event.snapshot.value.toString());
-        temperaturaDisplay = double.parse(temperaturaVal);
+        temperaturaDisplay = double.parse(temperaturaVal)/100;
 
        
       });
@@ -170,7 +170,7 @@ tileColor:Colors.amber ,
             _luz = value;
           }
           );
-        },
+        }, 
 
         secondary: const Icon(Icons.lightbulb_outline,  color: Colors.white70,),
       ),
@@ -229,6 +229,7 @@ Widget auto(){
           activeColor: Colors.greenAccent,
         inactiveColor: Colors.black26,
         values: tempRange,
+        min: 0,
         max: 100,
         divisions: 100,
         labels: RangeLabels(
@@ -286,27 +287,127 @@ Widget auto(){
 
 
 Widget home(){
-
-  return Container(
+return Scaffold(
+  body: Scrollbar(child: SingleChildScrollView(
+    child:  Container(
    color: Color(0xFF1E202C),
    child:Column(
-    
-    children: [
-            
-        Column(
+      children:[
+       teste(),
           
-          children: [
-            Row(
+        
+       
+   
+        lista(),
+      ]
+  
+    
+  
+          
+        
+        ),
+) ,
+  ),)
+ 
+   
+    );
+      
+
+}
+
+
+Widget teste(){
+  return Padding(
+  padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+  child: Container(
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          blurRadius: 5,
+          color: Color(0x230E151B),
+          offset: Offset(0, 2),
+        )
+      ],
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(16, 12, 0, 0),
+            child: Text(
+              'Course Summary',
+              
+            ),
+          ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-             Stack(
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                        child: circulotemp(),
+                         
+                      ),
+                      Text(
+                        'Course Progress',
+           
+                                
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                        child: circuloUmidade()
+                      ),
+                      Text(
+                        'Course Grade',
+                      
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  ),
+);
+
+}    
+
+
+
+
+Widget circuloUmidade(){
+  return Stack(
                   alignment: Alignment.center,
                   children: [
                     SizedBox(
-                      width: 207,
-                      height: 207,
+                      width: 100,
+                      height: 100,
                       child: CircularProgressIndicator(
-                       value: umidadeDisplay,                 
-                        strokeWidth: 20,
+                      color: Colors.blueAccent,
+                       value: umidadeDisplay ,                 
+                        strokeWidth: 10,
                       ),
                     ),
                     Text(
@@ -314,16 +415,63 @@ Widget home(){
                       style: const TextStyle(fontSize: 40),
                     ),
                   ],
-            ),
-            Stack(
+            );
+}
+
+
+Widget circuloUmidadesolo(){
+  return Stack(
                   alignment: Alignment.center,
                   children: [
                     SizedBox(
-                      width: 207,
-                      height: 207,
+                      width: 100,
+                      height: 100,
+                      child: CircularProgressIndicator(
+                        color: Colors.greenAccent,
+                       value: umidadeSoloDisplay ,                 
+                        strokeWidth: 10,
+                      ),
+                    ),
+                    Text(
+                      umidadeSoloVal,
+                      style: const TextStyle(fontSize: 40),
+                    ),
+                  ],
+            );
+}
+
+
+Widget circuloLuz(){
+  return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: CircularProgressIndicator(
+                        color: Colors.yellow,
+                       value: luzDisplay ,                 
+                        strokeWidth: 10,
+                      ),
+                    ),
+                    Text(
+                      luzVal,
+                      style: const TextStyle(fontSize: 40),
+                    ),
+                  ],
+            );
+}
+
+Widget circulotemp(){
+  return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      height: 100,
                       child: CircularProgressIndicator(
 
-                       value: temperaturaDisplay,                 
+                       value: temperaturaDisplay,              
                         strokeWidth: 10,
                       ),
                     ),
@@ -332,24 +480,20 @@ Widget home(){
                       style: const TextStyle(fontSize: 40),
                     ),
                   ],
-            )
-            
-              ],
-            ),
-       
+            );
+}
 
-  
-            
-          ],
+
+
+Widget lista(){
+  return Container(
+  child:ListTile(
+      title: const Text('ListTile with red background'),
+      tileColor: Colors.red,
     
-  
-          
-        
-        ),
-      
-    ],
-   ),
-  );
+  ),
+            
+            );
 }
 
 RangeValues umiRange = const RangeValues(40, 80);
@@ -428,7 +572,6 @@ RangeValues umiRange = const RangeValues(40, 80);
 
 }    
     
-     
 
 
 
