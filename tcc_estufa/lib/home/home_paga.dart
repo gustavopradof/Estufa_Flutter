@@ -4,7 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tcc_estufa/app_widget.dart';
 import 'package:tcc_estufa/firebase_options.dart';
- 
+import 'package:numberpicker/numberpicker.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -39,7 +39,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 DatabaseReference ref = FirebaseDatabase.instance.ref();
 
-
+  int tempoativacao = 3;
   String data = '';
   String umidadeVal= " ";
   double umidadeDisplay = 0;
@@ -50,7 +50,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref();
   double umidadeSoloDisplay = 0;
   String temperaturaVal = "";
   double temperaturaDisplay = 0 ;
-
+   final desligado= const Text('Desligado', style: TextStyle (color: Colors.red),);
   void _leumidade() {
     ref.child('/estufa_tcc/sensores/umidade').onValue.listen((event) {
       setState(() {
@@ -97,8 +97,10 @@ DatabaseReference ref = FirebaseDatabase.instance.ref();
   
   
 Widget config(){
- 
-return Container(
+return  SafeArea(
+      bottom: true,
+      top: true,
+   child: Container(
   
  color: Color(0xFF1E202C),
 child:  Column(
@@ -130,7 +132,7 @@ tileColor:Colors.amber ,
           );
         },
 
-        secondary: const Icon(Icons.lightbulb_outline, color: Colors.white70,),
+        secondary: const Icon(Icons.hdr_auto_rounded, color: Colors.white70,),
       ),
   
     SwitchListTile(
@@ -196,6 +198,7 @@ tileColor:Colors.amber ,
       
     ]
   ),
+  ),
   );
    
 
@@ -204,7 +207,10 @@ tileColor:Colors.amber ,
 
  
 Widget auto(){
-  return Container(
+ return  SafeArea(
+      bottom: true,
+      top: true,
+   child: Container(
 
      color: Color(0xFF1E202C),
      
@@ -259,7 +265,7 @@ Widget auto(){
            activeColor: Colors.greenAccent,
         values: umiRange,
         max: 100,
-        divisions: 10,
+        divisions: 100,
         labels: RangeLabels(
           umiRange.start.round().toString(),
           umiRange.end.round().toString(),
@@ -274,13 +280,32 @@ Widget auto(){
           });
         },
       ),
-      const Text('Tempo para ativação',
+      const Text('Tempo ativacao da bomba',
            style: TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w300,
   color: Color(0xFFAFB6C5),)
   ),
+      NumberPicker(
+       textStyle: TextStyle(color: Color(0x230E151B)),
+          value: tempoativacao,
+          minValue: 0,
+          maxValue: 100,
+        
+         // onChanged: (value) => setState(() => tempoativacao = value),
+          onChanged: (value) {
+            ref.update({
+            "/estufa_tcc/variaveis/tempoativacao": tempoativacao +1 ,
+          } 
+          
+            );
+            setState(() {
+            tempoativacao = value;
+          });
+          }
+      ),
     ]
+  ),
   ),
   );
 }
@@ -288,12 +313,19 @@ Widget auto(){
 
 Widget home(){
 return Scaffold(
-  body: Scrollbar(child: SingleChildScrollView(
+  backgroundColor:  Color(0xFF1E202C),
+  body: 
+     
+  SafeArea(
+      bottom: true,
+      top: true,
+    child: Scrollbar(child: SingleChildScrollView(
     child:  Container(
    color: Color(0xFF1E202C),
    child:Column(
       children:[
-       teste(),
+         circular2(),
+         circular1(),
           
         
        
@@ -309,44 +341,119 @@ return Scaffold(
 ) ,
   ),)
  
-   
+  ),
     );
       
 
 }
 
 
-Widget teste(){
+Widget circular1(){
   return Padding(
-  padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+  padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
   child: Container(
     width: double.infinity,
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: Color(0xFF1E202C),
+       boxShadow: [
+        BoxShadow(
+          blurRadius:  5,
+          color:  Color(0xFF1E202C),
+          offset:  Offset(0, 2),
+        )
+      ],
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Padding(
+   padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+         const Padding(
+             padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+           
+          ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                        child: circuloUmidadesolo(),
+                         
+                      ),
+                     const Text(
+                        'Umidade do Solo',
+            style:   TextStyle(color: Colors.white),
+                                
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                        child: circuloLuz()
+                      ),
+                     const Text(
+                        'Luminosidade',
+                       style:   TextStyle( color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  ),
+);
+
+}    
+
+Widget circular2(){
+  return Padding(
+   padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+  child: Container(
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color:  Color(0xFF1E202C),
       boxShadow: [
         BoxShadow(
           blurRadius: 5,
-          color: Color(0x230E151B),
+          color: Color(0xFF1E202C),
           offset: Offset(0, 2),
         )
       ],
       borderRadius: BorderRadius.circular(12),
     ),
     child: Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+     padding: EdgeInsetsDirectional.fromSTEB(16, 12, 0, 0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16, 12, 0, 0),
+           padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
             child: Text(
-              'Course Summary',
-              
+              'Leitura dos Sensores',
+               style:   TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
+             padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -361,8 +468,8 @@ Widget teste(){
                          
                       ),
                       Text(
-                        'Course Progress',
-           
+                        'Temperatura',
+            style:   TextStyle( color: Colors.white),
                                 
                       ),
                     ],
@@ -377,8 +484,8 @@ Widget teste(){
                         child: circuloUmidade()
                       ),
                       Text(
-                        'Course Grade',
-                      
+                        'Umidade',
+                         style:   TextStyle( color: Colors.white),
                       ),
                     ],
                   ),
@@ -395,8 +502,6 @@ Widget teste(){
 }    
 
 
-
-
 Widget circuloUmidade(){
   return Stack(
                   alignment: Alignment.center,
@@ -411,8 +516,8 @@ Widget circuloUmidade(){
                       ),
                     ),
                     Text(
-                      umidadeVal,
-                      style: const TextStyle(fontSize: 40),
+                      '$umidadeVal%',
+                      style: const TextStyle(fontSize: 40, color: Colors.white),
                     ),
                   ],
             );
@@ -433,8 +538,8 @@ Widget circuloUmidadesolo(){
                       ),
                     ),
                     Text(
-                      umidadeSoloVal,
-                      style: const TextStyle(fontSize: 40),
+                      '$umidadeSoloVal%',
+                      style: const TextStyle(fontSize: 40, color: Colors.white),
                     ),
                   ],
             );
@@ -455,8 +560,8 @@ Widget circuloLuz(){
                       ),
                     ),
                     Text(
-                      luzVal,
-                      style: const TextStyle(fontSize: 40),
+                      '$luzVal%',
+                      style: const TextStyle(fontSize: 40, color: Colors.white),
                     ),
                   ],
             );
@@ -473,11 +578,12 @@ Widget circulotemp(){
 
                        value: temperaturaDisplay,              
                         strokeWidth: 10,
+                        color: Colors.red,
                       ),
                     ),
                     Text(
-                      temperaturaVal,
-                      style: const TextStyle(fontSize: 40),
+                      '$temperaturaVal C',
+                      style: const TextStyle(fontSize: 40, color: Colors.white),
                     ),
                   ],
             );
@@ -486,14 +592,51 @@ Widget circulotemp(){
 
 
 Widget lista(){
-  return Container(
-  child:ListTile(
-      title: const Text('ListTile with red background'),
-      tileColor: Colors.red,
-    
-  ),
-            
-            );
+return Column(
+  
+  children: [
+    Card(
+      margin: EdgeInsetsDirectional.fromSTEB(16, 2, 16, 0),
+      color: Color(0xFF1E202C),
+      child: ListTile(
+       textColor: Colors.white,
+        leading: const Icon(Icons.hdr_auto_rounded, color: Colors.white70,),
+        title: Text('Modo automatico:  Desligado'              ),
+         
+      ),
+    ),
+    Card(
+       margin: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+        color: Color(0xFF1E202C),
+        
+      child: ListTile(
+         textColor: Colors.white,
+        leading: const Icon(MdiIcons.fan,  color: Colors.white70,),
+        title: Text('Ventilação:  Desligado' , 
+       ),
+      ),
+    ),
+    Card(
+      margin: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+       color: Color(0xFF1E202C),
+      child: ListTile(
+         
+        leading: const Icon(Icons.lightbulb_outline, color: Colors.white70,),
+         textColor: Colors.white,
+        title: Text('Aquecimento:  Desligado'),
+      ),
+    ),
+    Card(
+      margin: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+       color: Color(0xFF1E202C),
+      child: ListTile(
+         textColor: Colors.white,
+        leading: const Icon(MdiIcons.waterOutline,  color: Colors.white70,),
+        title: Text('Irrigação:  Desligado' ),
+      ),
+    ),
+  ]
+    );
 }
 
 RangeValues umiRange = const RangeValues(40, 80);
@@ -519,8 +662,9 @@ RangeValues umiRange = const RangeValues(40, 80);
     return Scaffold(
      
      bottomNavigationBar: BottomNavigationBar(
-      
-     backgroundColor: Color(0xFF1E202C),
+      unselectedItemColor: Colors.grey,
+      selectedItemColor: Colors.greenAccent,
+     backgroundColor: Color.fromARGB(255, 14, 21, 27),
     items: const <BottomNavigationBarItem>[
       
         

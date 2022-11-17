@@ -38,6 +38,7 @@ dependencies:
   firebase_core: ^2.2.0
   icon_forest: ^1.1.8
   material_design_icons_flutter: ^5.0.6996
+  numberpicker: ^2.1.1
 
 dev_dependencies:
   flutter_test:

@@ -12,7 +12,7 @@ class SplashPage extends StatefulWidget{
 class SplashPageState extends State<SplashPage>{
 
 void initializeSplash() async{
-  await Future.delayed(const Duration(seconds: 0));
+  await Future.delayed(const Duration(seconds: 4));
   Navigator.pushReplacementNamed(context, '/home');
 }
 
