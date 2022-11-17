@@ -50,6 +50,16 @@ DatabaseReference ref = FirebaseDatabase.instance.ref();
   double umidadeSoloDisplay = 0;
   String temperaturaVal = "";
   double temperaturaDisplay = 0 ;
+  String  valauto = '';
+  String  valaquecimento= '';
+  String  valirriga = '';
+  String  valvent = '';
+
+ String  auxauto = '';
+  String  auxaquecimento= '';
+  String  auxirriga = '';
+  String  auxvent = '';
+
    final desligado= const Text('Desligado', style: TextStyle (color: Colors.red),);
   void _leumidade() {
     ref.child('/estufa_tcc/sensores/umidade').onValue.listen((event) {
@@ -93,8 +103,77 @@ DatabaseReference ref = FirebaseDatabase.instance.ref();
     });
   }
 
+void _leauto(){
+   ref.child('/estufa_tcc/variaveis/auto').onValue.listen((event) {
+    auxauto= (event.snapshot.value.toString());
+       if (auxauto == 'true'){
+        valauto = 'Ligado';
 
-  
+       }
+       else {
+        valauto = 'Desligado';
+   
+       }
+    
+      setState(() {
+       
+      });
+    });
+}
+
+void _levent(){
+   ref.child('/estufa_tcc/atuadores/ventilador').onValue.listen((event) {
+    auxvent= (event.snapshot.value.toString());
+       if (auxvent == 'true'){
+        valvent = 'Ligado';
+
+       }
+       else {
+        valvent = 'Desligado';
+   
+       }
+    
+      setState(() {
+       
+      });
+    });
+}
+
+void _leirriga(){
+   ref.child('/estufa_tcc/atuadores/bomba').onValue.listen((event) {
+    auxirriga= (event.snapshot.value.toString());
+       if (auxirriga == 'true'){
+        valirriga = 'Ligado';
+
+       }
+       else {
+        valirriga = 'Desligado';
+   
+       }
+    
+      setState(() {
+       
+      });
+    });
+}
+void _leaquece(){
+   ref.child('/estufa_tcc/atuadores/luz').onValue.listen((event) {
+    auxaquecimento= (event.snapshot.value.toString());
+       if (auxaquecimento == 'true'){
+        valaquecimento = 'Ligado';
+
+       }
+       else {
+        valaquecimento = 'Desligado';
+   
+       }
+    
+      setState(() {
+       
+      });
+    });
+}
+
   
 Widget config(){
 return  SafeArea(
@@ -601,7 +680,7 @@ return Column(
       child: ListTile(
        textColor: Colors.white,
         leading: const Icon(Icons.hdr_auto_rounded, color: Colors.white70,),
-        title: Text('Modo automatico:  Desligado'              ),
+        title: Text('Modo automatico:  $valauto'              ),
          
       ),
     ),
@@ -612,7 +691,7 @@ return Column(
       child: ListTile(
          textColor: Colors.white,
         leading: const Icon(MdiIcons.fan,  color: Colors.white70,),
-        title: Text('Ventilação:  Desligado' , 
+        title: Text('Ventilação:  $valvent' , 
        ),
       ),
     ),
@@ -623,7 +702,7 @@ return Column(
          
         leading: const Icon(Icons.lightbulb_outline, color: Colors.white70,),
          textColor: Colors.white,
-        title: Text('Aquecimento:  Desligado'),
+        title: Text('Aquecimento:  $valaquecimento'),
       ),
     ),
     Card(
@@ -632,7 +711,7 @@ return Column(
       child: ListTile(
          textColor: Colors.white,
         leading: const Icon(MdiIcons.waterOutline,  color: Colors.white70,),
-        title: Text('Irrigação:  Desligado' ),
+        title: Text('Irrigação:  $valirriga' ),
       ),
     ),
   ]
@@ -658,7 +737,10 @@ RangeValues umiRange = const RangeValues(40, 80);
     _leluz();
     _letemp();
     _leumidadesolo();
-   
+   _leauto();
+   _leaquece();
+   _leirriga();
+   _levent();
     return Scaffold(
      
      bottomNavigationBar: BottomNavigationBar(
